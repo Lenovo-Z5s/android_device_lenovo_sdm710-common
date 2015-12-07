@@ -174,3 +174,6 @@ vendor.usb.use_ffs_mtp=0
 
 # Zygote
 zygote.critical_window.minute=10
+
+# OEM Unlock
+ro.oem_unlock_supported=1
