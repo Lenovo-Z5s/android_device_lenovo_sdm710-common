@@ -28,9 +28,9 @@ MY_DIR="${PWD}"
 
 VENDOR_DIR="${MY_DIR}"/../../../vendor/lenovo
 DEVICE=sdm710-common
-DIR_PREFIX="sdm710-common/proprietary/"
+DIR_PREFIX="proprietary/"
 
-cd "${VENDOR_DIR}"
+cd "${VENDOR_DIR}/${DEVICE}"
 
 # get commit id from input
 if [ "${#}" -eq 1 ]; 
