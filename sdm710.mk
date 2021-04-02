@@ -257,6 +257,9 @@ PRODUCT_PACKAGES += \
 # HWUI
 HWUI_COMPILE_FOR_PERF := true 
 
+# Kernel
+PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
+
 # Input
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/fts_ts.kl:$(TARGET_COPY_OUT_SYSTEM)/usr/keylayout/fts_ts.kl
