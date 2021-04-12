@@ -135,9 +135,6 @@ ro.apk_verity.mode=2
 # Media
 debug.stagefright.omx_default_rank=0
 
-# NetMgr
-ro.telephony.iwlan_operation_mode=legacy
-
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so
 ro.vendor.perf.scroll_opt=true
