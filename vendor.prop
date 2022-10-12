@@ -159,6 +159,9 @@ persist.vendor.radio.mt_sms_ack=30
 ro.soc.manufacturer=QTI
 ro.soc.model=SDM710
 
+# System Server
+arm64.memtag.process.system_server=off
+
 # Target specific Netflix custom property
 ro.netflix.bsp_rev=Q855-16947-1
 
