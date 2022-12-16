@@ -513,7 +513,7 @@ VENDOR_SECURITY_PATCH = $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH = $(PLATFORM_SECURITY_PATCH)
 
 # App launch prefetching (IORapd)
-PRODUCT_PROPERTY_OVERRIDES += \
+PRODUCT_SYSTEM_PROPERTIES += \
 	ro.iorapd.enable=false \
 	iorapd.perfetto.enable=false \
 	iorapd.readahead.enable=false \
