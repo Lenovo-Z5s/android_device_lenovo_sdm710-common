@@ -894,6 +894,7 @@ vendor/etc/init/vendor.qti.hardware.sensorscalibrate@1.0-service.rc
 vendor/etc/permissions/vendor-qti-hardware-sensorscalibrate.xml
 vendor/lib/vendor.qti.hardware.sensorscalibrate@1.0.so
 vendor/lib64/vendor.qti.hardware.sensorscalibrate@1.0.so
+-system_ext/framework/vendor.qti.hardware.sensorscalibrate-V1.0-java.jar
 
 # Sensor-configs
 vendor/etc/sensors/config/icm206xx_0.json
