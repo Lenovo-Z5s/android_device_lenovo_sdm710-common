@@ -341,9 +341,7 @@ function configure_zram_parameters() {
     # For >4GB Non-Go device, size = 4GB
     # And enable lz4 zram compression for Go targets.
 
-    if [ "$low_ram" == "true" ]; then
-        echo lz4 > /sys/block/zram0/comp_algorithm
-    fi
+    echo lz4 > /sys/block/zram0/comp_algorithm
 
     if [ -f /sys/block/zram0/disksize ]; then
         if [ -f /sys/block/zram0/use_dedup ]; then
