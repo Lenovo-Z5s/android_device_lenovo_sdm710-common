@@ -117,6 +117,7 @@ ro.surface_flinger.has_wide_color_display=true
 ro.surface_flinger.wcg_composition_dataspace=143261696
 debug.cpurend.vsync=false
 debug.sf.enable_egl_image_tracker=1
+debug.sf.enable_transaction_tracing=false
 debug.sf.disable_client_composition_cache=1
 
 # Graphics
