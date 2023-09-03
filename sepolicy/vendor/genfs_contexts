@@ -8,6 +8,6 @@ genfscon proc /sys/kernel/sched_boost                 u:object_r:proc_sysctl_sch
 genfscon sysfs /devices/virtual/touch/tp_dev/gesture_on u:object_r:sysfs_tp:s0
 
 # Graphics
-genfscon sysfs /devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon1/name                                                          u:object_r:sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon2/name                                                          u:object_r:sysfs_graphics:s0
-genfscon sysfs /devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon3/name                                                          u:object_r:sysfs_graphics:s0
+genfscon sysfs /sys/devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon1/name                                                          u:object_r:sysfs_graphics:s0
+genfscon sysfs /sys/devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon2/name                                                          u:object_r:sysfs_graphics:s0
+genfscon sysfs /sys/devices/platform/soc/soc:qcom,msm-ext-disp/extcon/extcon3/name                                                          u:object_r:sysfs_graphics:s0
