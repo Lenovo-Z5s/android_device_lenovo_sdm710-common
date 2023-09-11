@@ -66,6 +66,7 @@ TARGET_HAS_WIDE_COLOR_DISPLAY := true
 TARGET_USES_GRALLOC1 := true
 TARGET_USES_HWC2 := true
 TARGET_USES_ION := true
+TARGET_TAP_TO_WAKE_NODE := /sys/class/touch/tp_dev/gesture_on
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
