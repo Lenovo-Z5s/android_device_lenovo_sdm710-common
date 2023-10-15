@@ -6,3 +6,4 @@ allow init self:rawip_socket create_socket_perms_no_ioctl;
 allow init socket_device:sock_file { unlink setattr create };
 
 allow init debugfs_tracing_debug:dir mounton;
+allow init proc:file write;
