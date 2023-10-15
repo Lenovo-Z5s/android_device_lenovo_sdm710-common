@@ -18,15 +18,13 @@ import common
 import re
 
 def FullOTA_InstallEnd(info):
-  input_zip = info.input_zip
   OTA_UpdateFirmware(info)
-  OTA_InstallEnd(info, input_zip)
+  OTA_InstallEnd(info)
   return
 
 def IncrementalOTA_InstallEnd(info):
-  input_zip = info.target_zip
   OTA_UpdateFirmware(info)
-  OTA_InstallEnd(info, input_zip)
+  OTA_InstallEnd(info)
   return
 
 def OTA_UpdateFirmware(info):
@@ -59,14 +57,14 @@ def OTA_UpdateFirmware(info):
   info.script.AppendExtra('package_extract_file("install/firmware-update/xbl.elf", "/dev/block/bootdevice/by-name/xblbak");')
   info.script.AppendExtra('package_extract_file("install/firmware-update/NON-HLOS.bin", "/dev/block/bootdevice/by-name/modem");')
 
-def AddImage(info, input_zip, basename, dest):
+def AddImage(info, basename, dest):
   name = basename
-  data = input_zip.read("IMAGES/" + basename)
+  data = info.input_zip.read("IMAGES/" + basename)
   common.ZipWriteStr(info.output_zip, name, data)
   info.script.Print("Patching {} image unconditionally...".format(dest.split('/')[-1]))
   info.script.AppendExtra('package_extract_file("%s", "%s");' % (name, dest))
 
-def OTA_InstallEnd(info, input_zip):
-  AddImage(info, input_zip, "vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta")
-  AddImage(info, input_zip, "dtbo.img", "/dev/block/bootdevice/by-name/dtbo")
+def OTA_InstallEnd(info):
+  AddImage(info, "vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta")
+  AddImage(info, "dtbo.img", "/dev/block/bootdevice/by-name/dtbo")
   return
