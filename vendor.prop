@@ -82,7 +82,6 @@ vendor.audio.feature.snd_mon.enable=true
 vendor.voice.path.for.pcm.voip=true
 
 # Bluetooth
-vendor.bluetooth.soc=cherokee
 bluetooth.device.class_of_device=90,2,12
 bluetooth.hardware.power.operating_voltage_mv=3300
 bluetooth.profile.asha.central.enabled?=true
@@ -123,7 +122,6 @@ debug.sf.phase_offset_threshold_for_next_vsync_ns=6100000
 
 # Graphics
 debug.sf.auto_latch_unsignaled=true
-ro.hwui.render_ahead=20
 debug.hwui.renderer=opengl
 
 # Fastbootd
@@ -142,13 +140,9 @@ debug.stagefright.omx_default_rank=0
 ro.vendor.extension_library=libqti-perfd-client.so
 ro.vendor.perf.scroll_opt=true
 
-# Multi-gen LRU
-persist.device_config.mglru_native.lru_gen_config=all
-
 # Radio
 ro.carrier=unknown
 persist.radio.multisim.config=dsds
-persist.vendor.qti.telephony.vt_cam_interface=2
 persist.vendor.radio.add_power_save=1
 persist.vendor.radio.apm_sim_not_pwdn=1
 persist.vendor.radio.sib16_support=1
@@ -161,9 +155,6 @@ persist.vendor.radio.mt_sms_ack=30
 # SoC
 ro.soc.manufacturer=QTI
 ro.soc.model=SDM710
-
-# System Server
-arm64.memtag.process.system_server=off
 
 # Target specific Netflix custom property
 ro.netflix.bsp_rev=Q855-16947-1
