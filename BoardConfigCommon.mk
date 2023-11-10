@@ -138,6 +138,7 @@ OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 ENABLE_VENDOR_RIL_SERVICE := true
 
 # Sepolicy
+TARGET_USES_LOGDUMP_AS_METADATA := true
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/private
