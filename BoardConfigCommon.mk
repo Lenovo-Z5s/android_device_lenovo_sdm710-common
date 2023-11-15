@@ -177,4 +177,4 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 TARGET_SEC_FP_HAS_FINGERPRINT_GESTURES := true
 
 # Inherit from the proprietary version
--include vendor/lenovo/sdm710-common/BoardConfigVendor.mk
+include vendor/lenovo/sdm710-common/BoardConfigVendor.mk
