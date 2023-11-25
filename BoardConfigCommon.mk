@@ -43,7 +43,6 @@ BOARD_KERNEL_CMDLINE := \
 		loop.max_part=7 \
 		kpti=off
 BOARD_KERNEL_CMDLINE += androidboot.android_dt_dir=/non-existent androidboot.boot_devices=soc/7c4000.sdhci
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
