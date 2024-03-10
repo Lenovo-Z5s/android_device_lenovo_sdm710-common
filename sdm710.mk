@@ -511,12 +511,6 @@ PRODUCT_PACKAGES += \
     libnl \
     libwfdaac_vendor
 
-# Setting vendor SPL
-VENDOR_SECURITY_PATCH = $(PLATFORM_SECURITY_PATCH)
-
-# Set boot SPL
-BOOT_SECURITY_PATCH = $(PLATFORM_SECURITY_PATCH)
-
 # App launch prefetching (IORapd)
 PRODUCT_SYSTEM_PROPERTIES += \
 	ro.iorapd.enable=false \
