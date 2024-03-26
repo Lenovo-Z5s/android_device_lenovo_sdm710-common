@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "android.hardware.power-service.pixel.ext-libperfmgr"
+#define LOG_TAG "android.hardware.power-service.lenovo-sdm710-libperfmgr"
 
 #include "PowerExt.h"
 
@@ -50,11 +50,6 @@ ndk::ScopedAStatus PowerExt::setMode(const std::string &mode, bool enabled) {
     if (HintManager::GetInstance()->GetAdpfProfile() &&
         HintManager::GetInstance()->GetAdpfProfile()->mReportingRateLimitNs > 0) {
         PowerSessionManager::getInstance()->updateHintMode(mode, enabled);
-    }
-
-    if (mode == AdaptiveCpu::HINT_NAME) {
-        LOG(DEBUG) << "AdaptiveCpu intercepted hint";
-        mAdaptiveCpu->HintReceived(enabled);
     }
 
     return ndk::ScopedAStatus::ok();

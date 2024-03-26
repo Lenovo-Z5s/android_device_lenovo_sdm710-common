@@ -22,9 +22,7 @@
 #include <memory>
 #include <thread>
 
-#include "adaptivecpu/AdaptiveCpu.h"
-#include "disp-power/DisplayLowPower.h"
-#include "disp-power/InteractionHandler.h"
+#include "InteractionHandler.h"
 
 namespace aidl {
 namespace google {
@@ -39,7 +37,7 @@ using ::aidl::android::hardware::power::Mode;
 
 class Power : public ::aidl::android::hardware::power::BnPower {
   public:
-    Power(std::shared_ptr<DisplayLowPower> dlpw, std::shared_ptr<AdaptiveCpu> adaptiveCpu);
+    Power();
     ndk::ScopedAStatus setMode(Mode type, bool enabled) override;
     ndk::ScopedAStatus isModeSupported(Mode type, bool *_aidl_return) override;
     ndk::ScopedAStatus setBoost(Boost type, int32_t durationMs) override;
@@ -52,8 +50,6 @@ class Power : public ::aidl::android::hardware::power::BnPower {
     binder_status_t dump(int fd, const char **args, uint32_t numArgs) override;
 
   private:
-    std::shared_ptr<DisplayLowPower> mDisplayLowPower;
-    std::shared_ptr<AdaptiveCpu> mAdaptiveCpu;
     std::unique_ptr<InteractionHandler> mInteractionHandler;
     std::atomic<bool> mSustainedPerfModeOn;
 };

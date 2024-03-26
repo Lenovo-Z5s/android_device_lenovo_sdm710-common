@@ -1,7 +1,5 @@
-#pragma once
-
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +14,14 @@
  * limitations under the License.
  */
 
-#include <memory>
-#include <ostream>
-#include <vector>
+#pragma once
 
-#include "IFilesystem.h"
+#include <atomic>
+#include <memory>
+#include <thread>
+
+#include <aidl/google/hardware/power/extension/pixel/BnPowerExt.h>
+#include <perfmgr/HintManager.h>
 
 namespace aidl {
 namespace google {
@@ -29,13 +30,15 @@ namespace power {
 namespace impl {
 namespace pixel {
 
-class RealFilesystem : public IFilesystem {
+class PowerExt : public ::aidl::google::hardware::power::extension::pixel::BnPowerExt {
   public:
-    virtual ~RealFilesystem() {}
-    bool ListDirectory(const std::string &path, std::vector<std::string> *result) const override;
-    bool ReadFileStream(const std::string &path,
-                        std::unique_ptr<std::istream> *result) const override;
-    bool ResetFileStream(const std::unique_ptr<std::istream> &fileStream) const override;
+    PowerExt() {}
+    ndk::ScopedAStatus setMode(const std::string &mode, bool enabled) override;
+    ndk::ScopedAStatus isModeSupported(const std::string &mode, bool *_aidl_return) override;
+    ndk::ScopedAStatus setBoost(const std::string &boost, int32_t durationMs) override;
+    ndk::ScopedAStatus isBoostSupported(const std::string &boost, bool *_aidl_return) override;
+
+  private:
 };
 
 }  // namespace pixel

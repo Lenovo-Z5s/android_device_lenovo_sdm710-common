@@ -30,7 +30,6 @@
 
 #include "PowerHintSession.h"
 #include "PowerSessionManager.h"
-#include "disp-power/DisplayLowPower.h"
 
 namespace aidl {
 namespace google {
@@ -42,14 +41,17 @@ namespace pixel {
 using ::aidl::google::hardware::power::impl::pixel::PowerHintSession;
 using ::android::perfmgr::HintManager;
 
+#ifdef MODE_EXT
+extern bool isDeviceSpecificModeSupported(Mode type, bool* _aidl_return);
+extern bool setDeviceSpecificMode(Mode type, bool enabled);
+#endif
+
 constexpr char kPowerHalStateProp[] = "vendor.powerhal.state";
 constexpr char kPowerHalAudioProp[] = "vendor.powerhal.audio";
 constexpr char kPowerHalRenderingProp[] = "vendor.powerhal.rendering";
 
-Power::Power(std::shared_ptr<DisplayLowPower> dlpw, std::shared_ptr<AdaptiveCpu> adaptiveCpu)
-    : mDisplayLowPower(dlpw),
-      mAdaptiveCpu(adaptiveCpu),
-      mInteractionHandler(nullptr),
+Power::Power()
+    : mInteractionHandler(nullptr),
       mSustainedPerfModeOn(false) {
     mInteractionHandler = std::make_unique<InteractionHandler>();
     mInteractionHandler->Init();
@@ -76,46 +78,23 @@ Power::Power(std::shared_ptr<DisplayLowPower> dlpw, std::shared_ptr<AdaptiveCpu>
     }
 }
 
-static int sysfs_write(const char *path, const char *s)
-{
-    char buf[80];
-    int len;
-    int ret = 0;
-    int fd = open(path, O_WRONLY);
-
-    if (fd < 0) {
-        strerror_r(errno, buf, sizeof(buf));
-        ALOGE("Error opening %s: %s\n", path, buf);
-        return -1 ;
-    }
-
-    len = write(fd, s, strlen(s));
-    if (len < 0) {
-        strerror_r(errno, buf, sizeof(buf));
-        ALOGE("Error writing to %s: %s\n", path, buf);
-
-        ret = -1;
-    }
-
-    close(fd);
-
-    return ret;
-}
-
 ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
     LOG(DEBUG) << "Power setMode: " << toString(type) << " to: " << enabled;
     if (HintManager::GetInstance()->GetAdpfProfile() &&
         HintManager::GetInstance()->GetAdpfProfile()->mReportingRateLimitNs > 0) {
         PowerSessionManager::getInstance()->updateHintMode(toString(type), enabled);
     }
+#ifdef MODE_EXT
+    if (setDeviceSpecificMode(type, enabled)) {
+        return ndk::ScopedAStatus::ok();
+    }
+#endif
     switch (type) {
+#ifdef TAP_TO_WAKE_NODE
         case Mode::DOUBLE_TAP_TO_WAKE:
-            {
-            sysfs_write("/sys/class/touch/tp_dev/gesture_on", enabled ? "1" : "0");
-            }
+            ::android::base::WriteStringToFile(enabled ? "1" : "0", TAP_TO_WAKE_NODE, true);
             break;
-        case Mode::LOW_POWER:
-            break;
+#endif
         case Mode::SUSTAINED_PERFORMANCE:
             if (enabled) {
                 HintManager::GetInstance()->DoHint("SUSTAINED_PERFORMANCE");
@@ -127,6 +106,10 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
                 break;
             }
             [[fallthrough]];
+#ifndef TAP_TO_WAKE_NODE
+        case Mode::DOUBLE_TAP_TO_WAKE:
+            [[fallthrough]];
+#endif
         case Mode::FIXED_PERFORMANCE:
             [[fallthrough]];
         case Mode::EXPENSIVE_RENDERING:
@@ -138,8 +121,6 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
         case Mode::DISPLAY_INACTIVE:
             [[fallthrough]];
         case Mode::AUDIO_STREAMING_LOW_LATENCY:
-            [[fallthrough]];
-        case Mode::GAME_LOADING:
             [[fallthrough]];
         default:
             if (enabled) {
@@ -154,11 +135,18 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
 }
 
 ndk::ScopedAStatus Power::isModeSupported(Mode type, bool *_aidl_return) {
+#ifdef MODE_EXT
+    if (isDeviceSpecificModeSupported(type, _aidl_return)) {
+        return ndk::ScopedAStatus::ok();
+    }
+#endif
+
     bool supported = HintManager::GetInstance()->IsHintSupported(toString(type));
-    // LOW_POWER and DOUBLE_TAP_TO_WAKE handled insides PowerHAL specifically
-    if (type == Mode::LOW_POWER || type == Mode::DOUBLE_TAP_TO_WAKE) {
+#ifdef TAP_TO_WAKE_NODE
+    if (type == Mode::DOUBLE_TAP_TO_WAKE) {
         supported = true;
     }
+#endif
     LOG(INFO) << "Power mode " << toString(type) << " isModeSupported: " << supported;
     *_aidl_return = supported;
     return ndk::ScopedAStatus::ok();
@@ -221,7 +209,6 @@ binder_status_t Power::dump(int fd, const char **, uint32_t) {
     // Dump nodes through libperfmgr
     HintManager::GetInstance()->DumpToFd(fd);
     PowerSessionManager::getInstance()->dumpToFd(fd);
-    mAdaptiveCpu->DumpToFd(fd);
     if (!::android::base::WriteStringToFd(buf, fd)) {
         PLOG(ERROR) << "Failed to dump state to fd";
     }
@@ -244,7 +231,7 @@ ndk::ScopedAStatus Power::createHintSession(int32_t tgid, int32_t uid,
         return ndk::ScopedAStatus::fromExceptionCode(EX_ILLEGAL_ARGUMENT);
     }
     std::shared_ptr<IPowerHintSession> session = ndk::SharedRefBase::make<PowerHintSession>(
-            mAdaptiveCpu, tgid, uid, threadIds, durationNanos);
+            tgid, uid, threadIds, durationNanos);
     *_aidl_return = session;
     return ndk::ScopedAStatus::ok();
 }
