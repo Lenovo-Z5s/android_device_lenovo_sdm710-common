@@ -236,7 +236,9 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.1.vendor
+    android.hardware.biometrics.fingerprint-service.xiaomi \
+    android.hardware.biometrics.fingerprint@2.1.vendor \
+
 
 # Dynamic Partitions
 PRODUCT_BUILD_SUPER_PARTITION := false
@@ -440,6 +442,7 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
+    hardware/xiaomi \
     hardware/google/interfaces \
     hardware/google/pixel \
     vendor/qcom/opensource/commonsys/system/bt/conf \
