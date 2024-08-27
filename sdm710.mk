@@ -192,7 +192,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.3-service \
     android.hardware.graphics.mapper@2.0-impl-qti-display \
-    android.hardware.memtrack-service.example \
     gralloc.sdm710 \
     hwcomposer.sdm710 \
     libdisplayconfig.qti \
@@ -203,9 +202,9 @@ PRODUCT_PACKAGES += \
     vendor.display.config@1.0.vendor \
     vendor.display.config@2.0 \
     vendor.display.config@2.0.vendor \
-    memtrack.sdm710 \
     vendor.qti.hardware.display.allocator@1.0-service \
-    vendor.qti.hardware.display.config-V5-ndk
+    vendor.qti.hardware.display.config-V5-ndk \
+    vendor.qti.hardware.memtrack-service
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.surface_flinger.has_HDR_display=true \
