@@ -61,7 +61,10 @@ fi
 function blob_fixup() {
     case "${1}" in
         vendor/etc/seccomp_policy/vendor.qti.hardware.dsp.policy)
-            echo 'madvise: 1' >> ${2}
+            echo 'madvise: 1' >> "${2}"
+            ;;
+        vendor/lib/libwvhidl.so)
+            "${PATCHELF}" --replace-needed "libcrypto.so" "libcrypto-v33.so" "${2}"
             ;;
     esac
 }

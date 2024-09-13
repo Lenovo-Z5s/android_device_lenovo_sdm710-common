@@ -197,6 +197,10 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.3.vendor \
     android.hardware.drm-service.clearkey
 
+# CBS_init
+PRODUCT_PACKAGES += \
+    libcrypto-v33
+
 # Fastbootd
 PRODUCT_PACKAGES += \
     fastbootd
