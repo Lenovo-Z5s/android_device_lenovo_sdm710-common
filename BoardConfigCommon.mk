@@ -146,6 +146,9 @@ ENABLE_VENDOR_RIL_SERVICE := true
 # Security patch level
 VENDOR_SECURITY_PATCH := 2020-03-01
 
+# Updater
+AB_OTA_UPDATER := false
+
 # Sepolicy
 TARGET_USES_LOGDUMP_AS_METADATA := true
 include device/qcom/sepolicy_vndr/SEPolicy.mk
