@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include <aidl/android/hardware/power/BnPowerHintSession.h>
 #include <aidl/android/hardware/power/WorkDuration.h>
 #include <utils/Looper.h>
 #include <utils/Thread.h>
-
 #include <mutex>
 #include <unordered_map>
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 using aidl::android::hardware::power::BnPowerHintSession;
 using aidl::android::hardware::power::WorkDuration;
 using ::android::Message;
@@ -40,7 +35,6 @@ using std::chrono::milliseconds;
 using std::chrono::nanoseconds;
 using std::chrono::steady_clock;
 using std::chrono::time_point;
-
 struct AppHintDesc {
     AppHintDesc(int32_t tgid, int32_t uid, std::vector<int> threadIds)
         : tgid(tgid),
@@ -65,7 +59,6 @@ struct AppHintDesc {
     int64_t integral_error;
     int64_t previous_error;
 };
-
 class PowerHintSession : public BnPowerHintSession {
   public:
     explicit PowerHintSession(int32_t tgid, int32_t uid, const std::vector<int32_t> &threadIds,
@@ -85,9 +78,7 @@ class PowerHintSession : public BnPowerHintSession {
     const std::vector<int> &getTidList() const;
     int getUclampMin();
     void dumpToStream(std::ostream &stream);
-
     time_point<steady_clock> getStaleTime();
-
   private:
     class StaleTimerHandler : public MessageHandler {
       public:
@@ -95,7 +86,6 @@ class PowerHintSession : public BnPowerHintSession {
         void updateTimer();
         void handleMessage(const Message &message) override;
         void setSessionDead();
-
       private:
         PowerHintSession *mSession;
         std::mutex mClosedLock;
@@ -103,7 +93,6 @@ class PowerHintSession : public BnPowerHintSession {
         std::atomic<time_point<steady_clock>> mStaleTime;
         bool mIsSessionDead;
     };
-
   private:
     void updateUniveralBoostMode();
     int setSessionUclampMin(int32_t min);
@@ -120,7 +109,6 @@ class PowerHintSession : public BnPowerHintSession {
     // To cache the status of whether ADPF hints are supported.
     std::unordered_map<std::string, std::optional<bool>> mSupportedHints;
 };
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

@@ -13,34 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include <android-base/properties.h>
 #include <perfmgr/HintManager.h>
 #include <utils/Looper.h>
-
 #include <mutex>
 #include <optional>
 #include <unordered_set>
-
 #include "PowerHintSession.h"
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 using ::android::Looper;
 using ::android::Message;
 using ::android::MessageHandler;
 using ::android::Thread;
 using ::android::perfmgr::HintManager;
-
 constexpr char kPowerHalAdpfDisableTopAppBoost[] = "vendor.powerhal.adpf.disable.hint";
-
 class PowerSessionManager : public MessageHandler {
   public:
     // current hint info
@@ -54,19 +46,16 @@ class PowerSessionManager : public MessageHandler {
     void setUclampMinLocked(PowerHintSession *session, int min);
     void handleMessage(const Message &message) override;
     void dumpToFd(int fd);
-
     // Singleton
     static sp<PowerSessionManager> getInstance() {
         static sp<PowerSessionManager> instance = new PowerSessionManager();
         return instance;
     }
-
   private:
     std::optional<bool> isAnyAppSessionActive();
     void disableSystemTopAppBoost();
     void enableSystemTopAppBoost();
     const std::string kDisableBoostHintName;
-
     std::unordered_set<PowerHintSession *> mSessions;  // protected by mLock
     std::unordered_map<int, int> mTidRefCountMap;      // protected by mLock
     std::unordered_map<int, std::unordered_set<PowerHintSession *>> mTidSessionListMap;
@@ -85,7 +74,6 @@ class PowerSessionManager : public MessageHandler {
     PowerSessionManager(PowerSessionManager const &) = delete;
     void operator=(PowerSessionManager const &) = delete;
 };
-
 class PowerHintMonitor : public Thread {
   public:
     void start();
@@ -98,13 +86,11 @@ class PowerHintMonitor : public Thread {
     }
     PowerHintMonitor(PowerHintMonitor const &) = delete;
     void operator=(PowerHintMonitor const &) = delete;
-
   private:
     sp<Looper> mLooper;
     // Singleton
     PowerHintMonitor() : Thread(false), mLooper(new Looper(true)) {}
 };
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

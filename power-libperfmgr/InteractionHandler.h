@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 enum InteractionState {
     INTERACTION_STATE_UNINITIALIZED,
     INTERACTION_STATE_IDLE,
     INTERACTION_STATE_INTERACTION,
     INTERACTION_STATE_WAITING,
 };
-
 class InteractionHandler {
   public:
     InteractionHandler();
@@ -43,16 +38,13 @@ class InteractionHandler {
     bool Init();
     void Exit();
     void Acquire(int32_t duration);
-
   private:
     void Release();
     void WaitForIdle(int32_t wait_ms, int32_t timeout_ms);
     void AbortWaitLocked();
     void Routine();
-
     void PerfLock();
     void PerfRel();
-
     enum InteractionState mState;
     int mIdleFd;
     int mEventFd;
@@ -62,7 +54,6 @@ class InteractionHandler {
     std::mutex mLock;
     std::condition_variable mCond;
 };
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

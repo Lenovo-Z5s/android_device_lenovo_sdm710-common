@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #define LOG_TAG "powerhal-libperfmgr"
-
 #include "Power.h"
-
 #include <android-base/file.h>
 #include <android-base/logging.h>
 #include <android-base/properties.h>
@@ -25,37 +22,29 @@
 #include <android-base/strings.h>
 #include <perfmgr/HintManager.h>
 #include <utils/Log.h>
-
 #include <mutex>
-
 #include "PowerHintSession.h"
 #include "PowerSessionManager.h"
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 using ::aidl::google::hardware::power::impl::pixel::PowerHintSession;
 using ::android::perfmgr::HintManager;
-
 #ifdef MODE_EXT
 extern bool isDeviceSpecificModeSupported(Mode type, bool* _aidl_return);
 extern bool setDeviceSpecificMode(Mode type, bool enabled);
 #endif
-
 constexpr char kPowerHalStateProp[] = "vendor.powerhal.state";
 constexpr char kPowerHalAudioProp[] = "vendor.powerhal.audio";
 constexpr char kPowerHalRenderingProp[] = "vendor.powerhal.rendering";
-
 Power::Power()
     : mInteractionHandler(nullptr),
       mSustainedPerfModeOn(false) {
     mInteractionHandler = std::make_unique<InteractionHandler>();
     mInteractionHandler->Init();
-
     std::string state = ::android::base::GetProperty(kPowerHalStateProp, "");
     if (state == "SUSTAINED_PERFORMANCE") {
         LOG(INFO) << "Initialize with SUSTAINED_PERFORMANCE on";
@@ -64,20 +53,17 @@ Power::Power()
     } else {
         LOG(INFO) << "Initialize PowerHAL";
     }
-
     state = ::android::base::GetProperty(kPowerHalAudioProp, "");
     if (state == "AUDIO_STREAMING_LOW_LATENCY") {
         LOG(INFO) << "Initialize with AUDIO_LOW_LATENCY on";
         HintManager::GetInstance()->DoHint(state);
     }
-
     state = ::android::base::GetProperty(kPowerHalRenderingProp, "");
     if (state == "EXPENSIVE_RENDERING") {
         LOG(INFO) << "Initialize with EXPENSIVE_RENDERING on";
         HintManager::GetInstance()->DoHint("EXPENSIVE_RENDERING");
     }
 }
-
 ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
     LOG(DEBUG) << "Power setMode: " << toString(type) << " to: " << enabled;
     if (HintManager::GetInstance()->GetAdpfProfile() &&
@@ -130,17 +116,14 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
             }
             break;
     }
-
     return ndk::ScopedAStatus::ok();
 }
-
 ndk::ScopedAStatus Power::isModeSupported(Mode type, bool *_aidl_return) {
 #ifdef MODE_EXT
     if (isDeviceSpecificModeSupported(type, _aidl_return)) {
         return ndk::ScopedAStatus::ok();
     }
 #endif
-
     bool supported = HintManager::GetInstance()->IsHintSupported(toString(type));
 #ifdef TAP_TO_WAKE_NODE
     if (type == Mode::DOUBLE_TAP_TO_WAKE) {
@@ -151,7 +134,6 @@ ndk::ScopedAStatus Power::isModeSupported(Mode type, bool *_aidl_return) {
     *_aidl_return = supported;
     return ndk::ScopedAStatus::ok();
 }
-
 ndk::ScopedAStatus Power::setBoost(Boost type, int32_t durationMs) {
     LOG(DEBUG) << "Power setBoost: " << toString(type) << " duration: " << durationMs;
     if (HintManager::GetInstance()->GetAdpfProfile() &&
@@ -185,21 +167,17 @@ ndk::ScopedAStatus Power::setBoost(Boost type, int32_t durationMs) {
             }
             break;
     }
-
     return ndk::ScopedAStatus::ok();
 }
-
 ndk::ScopedAStatus Power::isBoostSupported(Boost type, bool *_aidl_return) {
     bool supported = HintManager::GetInstance()->IsHintSupported(toString(type));
     LOG(INFO) << "Power boost " << toString(type) << " isBoostSupported: " << supported;
     *_aidl_return = supported;
     return ndk::ScopedAStatus::ok();
 }
-
 constexpr const char *boolToString(bool b) {
     return b ? "true" : "false";
 }
-
 binder_status_t Power::dump(int fd, const char **, uint32_t) {
     std::string buf(::android::base::StringPrintf(
             "HintManager Running: %s\n"
@@ -215,7 +193,6 @@ binder_status_t Power::dump(int fd, const char **, uint32_t) {
     fsync(fd);
     return STATUS_OK;
 }
-
 ndk::ScopedAStatus Power::createHintSession(int32_t tgid, int32_t uid,
                                             const std::vector<int32_t> &threadIds,
                                             int64_t durationNanos,
@@ -235,7 +212,6 @@ ndk::ScopedAStatus Power::createHintSession(int32_t tgid, int32_t uid,
     *_aidl_return = session;
     return ndk::ScopedAStatus::ok();
 }
-
 ndk::ScopedAStatus Power::getHintSessionPreferredRate(int64_t *outNanoseconds) {
     *outNanoseconds = HintManager::GetInstance()->GetAdpfProfile()
                               ? HintManager::GetInstance()->GetAdpfProfile()->mReportingRateLimitNs
@@ -243,10 +219,8 @@ ndk::ScopedAStatus Power::getHintSessionPreferredRate(int64_t *outNanoseconds) {
     if (*outNanoseconds <= 0) {
         return ndk::ScopedAStatus::fromExceptionCode(EX_UNSUPPORTED_OPERATION);
     }
-
     return ndk::ScopedAStatus::ok();
 }
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include <atomic>
 #include <memory>
 #include <thread>
-
 #include <aidl/google/hardware/power/extension/pixel/BnPowerExt.h>
 #include <perfmgr/HintManager.h>
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 class PowerExt : public ::aidl::google::hardware::power::extension::pixel::BnPowerExt {
   public:
     PowerExt() {}
@@ -37,10 +32,8 @@ class PowerExt : public ::aidl::google::hardware::power::extension::pixel::BnPow
     ndk::ScopedAStatus isModeSupported(const std::string &mode, bool *_aidl_return) override;
     ndk::ScopedAStatus setBoost(const std::string &boost, int32_t durationMs) override;
     ndk::ScopedAStatus isBoostSupported(const std::string &boost, bool *_aidl_return) override;
-
   private:
 };
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

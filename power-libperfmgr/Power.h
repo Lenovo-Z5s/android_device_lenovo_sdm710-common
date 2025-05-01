@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
-
 #include <aidl/android/hardware/power/BnPower.h>
-
 #include <atomic>
 #include <memory>
 #include <thread>
-
 #include "InteractionHandler.h"
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 using ::aidl::android::hardware::power::Boost;
 using ::aidl::android::hardware::power::IPowerHintSession;
 using ::aidl::android::hardware::power::Mode;
-
 class Power : public ::aidl::android::hardware::power::BnPower {
   public:
     Power();
@@ -48,12 +41,10 @@ class Power : public ::aidl::android::hardware::power::BnPower {
                                          std::shared_ptr<IPowerHintSession> *_aidl_return) override;
     ndk::ScopedAStatus getHintSessionPreferredRate(int64_t *outNanoseconds) override;
     binder_status_t dump(int fd, const char **args, uint32_t numArgs) override;
-
   private:
     std::unique_ptr<InteractionHandler> mInteractionHandler;
     std::atomic<bool> mSustainedPerfModeOn;
 };
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power

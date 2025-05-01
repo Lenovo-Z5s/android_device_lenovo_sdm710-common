@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #define LOG_TAG "powerhal-libperfmgr"
 #define ATRACE_TAG (ATRACE_TAG_POWER | ATRACE_TAG_HAL)
-
 #include "PowerSessionManager.h"
-
 #include <android-base/file.h>
 #include <log/log.h>
 #include <perfmgr/HintManager.h>
 #include <processgroup/processgroup.h>
 #include <sys/syscall.h>
 #include <utils/Trace.h>
-
 namespace aidl {
 namespace google {
 namespace hardware {
 namespace power {
 namespace impl {
 namespace pixel {
-
 using ::android::perfmgr::AdpfConfig;
 using ::android::perfmgr::HintManager;
-
 namespace {
 /* there is no glibc or bionic wrapper */
 struct sched_attr {
@@ -50,7 +44,6 @@ struct sched_attr {
     __u32 sched_util_min;
     __u32 sched_util_max;
 };
-
 static int sched_setattr(int pid, struct sched_attr *attr, unsigned int flags) {
     if (!HintManager::GetInstance()->GetAdpfProfile()->mUclampMinOn) {
         ALOGV("PowerSessionManager:%s: skip", __func__);
@@ -58,25 +51,20 @@ static int sched_setattr(int pid, struct sched_attr *attr, unsigned int flags) {
     }
     return syscall(__NR_sched_setattr, pid, attr, flags);
 }
-
 static void set_uclamp_min(int tid, int min) {
     static constexpr int32_t kMaxUclampValue = 1024;
     min = std::max(0, min);
     min = std::min(min, kMaxUclampValue);
-
     sched_attr attr = {};
     attr.size = sizeof(attr);
-
     attr.sched_flags = (SCHED_FLAG_KEEP_ALL | SCHED_FLAG_UTIL_CLAMP_MIN);
     attr.sched_util_min = min;
-
     int ret = sched_setattr(tid, &attr, 0);
     if (ret) {
         ALOGW("sched_setattr failed for thread %d, err=%d", tid, errno);
     }
 }
 }  // namespace
-
 void PowerSessionManager::updateHintMode(const std::string &mode, bool enabled) {
     ALOGV("PowerSessionManager::updateHintMode: mode: %s, enabled: %d", mode.c_str(), enabled);
     if (enabled && mode.compare(0, 8, "REFRESH_") == 0) {
@@ -89,20 +77,17 @@ void PowerSessionManager::updateHintMode(const std::string &mode, bool enabled) 
         }
     }
     if (HintManager::GetInstance()->GetAdpfProfile()) {
-        HintManager::GetInstance()->SetAdpfProfile(mode);
+        HintManager::GetInstance()->SetAdpfProfile("PowerHint", mode);
     }
 }
-
 void PowerSessionManager::updateHintBoost(const std::string &boost, int32_t durationMs) {
     ATRACE_CALL();
     ALOGV("PowerSessionManager::updateHintBoost: boost: %s, durationMs: %d", boost.c_str(),
           durationMs);
 }
-
 int PowerSessionManager::getDisplayRefreshRate() {
     return mDisplayRefreshRate;
 }
-
 void PowerSessionManager::addPowerSession(PowerHintSession *session) {
     std::lock_guard<std::mutex> guard(mLock);
     for (auto t : session->getTidList()) {
@@ -123,7 +108,6 @@ void PowerSessionManager::addPowerSession(PowerHintSession *session) {
     }
     mSessions.insert(session);
 }
-
 void PowerSessionManager::removePowerSession(PowerHintSession *session) {
     std::lock_guard<std::mutex> guard(mLock);
     for (auto t : session->getTidList()) {
@@ -142,12 +126,10 @@ void PowerSessionManager::removePowerSession(PowerHintSession *session) {
     }
     mSessions.erase(session);
 }
-
 void PowerSessionManager::setUclampMin(PowerHintSession *session, int val) {
     std::lock_guard<std::mutex> guard(mLock);
     setUclampMinLocked(session, val);
 }
-
 void PowerSessionManager::setUclampMinLocked(PowerHintSession *session, int val) {
     for (auto t : session->getTidList()) {
         // Get thex max uclamp.min across sessions which include the tid.
@@ -160,7 +142,6 @@ void PowerSessionManager::setUclampMinLocked(PowerHintSession *session, int val)
         set_uclamp_min(t, std::max(val, tidMax));
     }
 }
-
 std::optional<bool> PowerSessionManager::isAnyAppSessionActive() {
     std::lock_guard<std::mutex> guard(mLock);
     bool active = false;
@@ -176,10 +157,8 @@ std::optional<bool> PowerSessionManager::isAnyAppSessionActive() {
     } else {
         mActive = active;
     }
-
     return active;
 }
-
 void PowerSessionManager::handleMessage(const Message &) {
     auto active = isAnyAppSessionActive();
     if (!active.has_value()) {
@@ -191,7 +170,6 @@ void PowerSessionManager::handleMessage(const Message &) {
         enableSystemTopAppBoost();
     }
 }
-
 void PowerSessionManager::dumpToFd(int fd) {
     std::ostringstream dump_buf;
     std::lock_guard<std::mutex> guard(mLock);
@@ -213,39 +191,33 @@ void PowerSessionManager::dumpToFd(int fd) {
         ALOGE("Failed to dump one of session list to fd:%d", fd);
     }
 }
-
 void PowerSessionManager::enableSystemTopAppBoost() {
     if (HintManager::GetInstance()->IsHintSupported(kDisableBoostHintName)) {
         ALOGV("PowerSessionManager::enableSystemTopAppBoost!!");
         HintManager::GetInstance()->EndHint(kDisableBoostHintName);
     }
 }
-
 void PowerSessionManager::disableSystemTopAppBoost() {
     if (HintManager::GetInstance()->IsHintSupported(kDisableBoostHintName)) {
         ALOGV("PowerSessionManager::disableSystemTopAppBoost!!");
         HintManager::GetInstance()->DoHint(kDisableBoostHintName);
     }
 }
-
 // =========== PowerHintMonitor implementation start from here ===========
 void PowerHintMonitor::start() {
     if (!isRunning()) {
         run("PowerHintMonitor", ::android::PRIORITY_HIGHEST);
     }
 }
-
 bool PowerHintMonitor::threadLoop() {
     while (true) {
         mLooper->pollOnce(-1);
     }
     return true;
 }
-
 sp<Looper> PowerHintMonitor::getLooper() {
     return mLooper;
 }
-
 }  // namespace pixel
 }  // namespace impl
 }  // namespace power
