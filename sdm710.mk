@@ -62,6 +62,23 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.midi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.midi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.sip.voip.xml
 
+# QPR3
+PRODUCT_PACKAGES += \
+    libaudioroute \
+    libaudioroute.vendor \
+    libstagefrighthw \
+    libstagefright_softomx_plugin.vendor \
+    libprocessgroup.vendor \
+    libsqlite.vendor \
+    liblz4.vendor \
+    libssl.vendor \
+    libcurl.vendor \
+    libjsoncpp.vendor \
+    libsqlite.vendor \
+    libtinyxml \
+    libavservices_minijail.vendor \
+    libpng.vendor
+
 # AID/fs configs
 PRODUCT_PACKAGES += \
     fs_config_files
