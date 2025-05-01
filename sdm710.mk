@@ -160,6 +160,11 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.qcom.rc
 
+# Recovery init
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/etc/init.recovery.qcom.rc:$(TARGET_RECOVERY_OUT)/root/init.recovery.qcom.rc \
+    $(LOCAL_PATH)/rootdir/etc/init.recovery.usb.rc:$(TARGET_RECOVERY_OUT)/root/init.recovery.usb.rc
+
 # Codec2
 PRODUCT_PACKAGES += \
     libcodec2_vndk.vendor \
