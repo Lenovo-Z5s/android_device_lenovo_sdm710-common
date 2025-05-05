@@ -30,11 +30,6 @@ import /vendor/etc/init/hw/init.msm.usb.configfs.rc
 import /vendor/etc/init/hw/init.target.rc
 
 on early-init
-
-    # Remove some data cache
-    rm /data/resource-cache
-    rm /data/system/package_cache
-
     chown root system /dev/kmsg
     chmod 0620 /dev/kmsg
     # Load WIGIG platform driver
