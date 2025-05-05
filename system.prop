@@ -4,9 +4,6 @@ vendor.qcom.bluetooth.soc=cherokee
 # Audio
 persist.vendor.bt.a2dp_offload_cap=sbc-aptx-aptxhd-aac-ldac
 
-# Multi-gen LRU
-persist.device_config.mglru_native.lru_gen_config=all
-
 # Graphics
 ro.hwui.render_ahead=20
 
