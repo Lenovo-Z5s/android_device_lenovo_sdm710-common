@@ -127,9 +127,6 @@ ro.fastbootd.available=true
 # Factory Reset Protection
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
-# FS-verity
-ro.apk_verity.mode=2
-
 # Media
 debug.stagefright.omx_default_rank=0
 
