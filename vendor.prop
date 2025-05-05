@@ -130,9 +130,6 @@ ro.fastbootd.available=true
 # Factory Reset Protection
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
-# FUSE passthrough
-persist.sys.fuse.passthrough.enable=true
-
 # FS-verity
 ro.apk_verity.mode=2
 
