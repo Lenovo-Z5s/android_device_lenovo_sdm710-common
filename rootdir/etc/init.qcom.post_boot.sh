@@ -342,25 +342,13 @@ function configure_zram_parameters() {
     # And enable lz4 zram compression for Go targets.
 
     echo lz4 > /sys/block/zram0/comp_algorithm
-
-    if [ -f /sys/block/zram0/disksize ]; then
-        if [ -f /sys/block/zram0/use_dedup ]; then
-            echo 1 > /sys/block/zram0/use_dedup
-        fi
-        if [ $MemTotal -le 524288 ]; then
-            echo 402653184 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 1048576 ]; then
-            echo 805306368 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 3145728 ]; then
-            echo 1073741824 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 4194304 ]; then
-            echo 1073741824 > /sys/block/zram0/disksize
-        else
-            echo 1073741824 > /sys/block/zram0/disksize
-        fi
-        mkswap /dev/block/zram0
-        swapon /dev/block/zram0 -p 32758
+    let 'ZMEM=((MemTotal/100)*50)*1024'
+    if [ -f /sys/block/zram0/use_dedup ]; then
+        echo 1 > /sys/block/zram0/use_dedup
     fi
+    echo $ZMEM > /sys/block/zram0/disksize
+    mkswap /dev/block/zram0
+    swapon -d /dev/block/zram0
 }
 
 function configure_read_ahead_kb_values() {
